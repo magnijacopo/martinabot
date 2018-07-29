@@ -1,12 +1,12 @@
 <?php
 
-define('api', 'https://api.telegram.org/bot'.token.'/');
+$content = file_get_contents("php://input");
+$update = json_decode($content, true);
 
-$data = file_get_contents("php://input");
-$update = json_decode($data, true);
-
-$from = $message["from"];
-$nome = $from["first_name"];
+if(!$update)
+{
+    exit;
+}
 
 $message = isset($update['message']) ? $update['message'] : "";
 $messageid = isset($message['message_id']) ? $message['message_id'] : "";
@@ -29,11 +29,10 @@ function apiRequest($metodo){
     return $req;
 }
 
-function send($id, $text){
-    if(strpos($text, "\n")){
-        $text = urlencode($text);
-    }
-    return apiRequest("sendMessage?text=$text&parse_mode=HTML&chat_id=$id");
+function send($chatid, $text){
+    $parameters = array('chat_id' => $chatid, "text" => $text);
+    $parameters["method"] = "sendMessage";
+    return json_encode($parameters);
 }
 
 function keyboard($tasti, $text, $cd){
@@ -74,7 +73,7 @@ if(strpos($text, "/start") === 0 ) {
     inlineKeyboard($but, $chatid, "Scegli che questionario farà la prossima persona!");
 
 } else {
-    send($cid, "Mi spiace ma non sono in grado di capire quel che dici, prova a ripetermelo diversamente!");
+    send($chatid, "Mi spiace ma non sono in grado di capire quel che dici, prova a ripetermelo diversamente!");
 }
 
 if(callback($update)){
