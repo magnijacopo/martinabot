@@ -54,7 +54,9 @@ function sendKeyboard($chatid, $text) {
     $parameters = array('chat_id' => $chatid, "text" => $text);
     $parameters["method"] = "sendMessage";
     $keyboard = ['inline_keyboard' => [[["text" => "Needs Parlare", "callback_data" => "needsParlare"],
-    ["text" => "Wants Parlare", "callback_data" => "wantsParlare"]]]];
+    ["text" => "Wants Parlare", "callback_data" => "wantsParlare"],
+    ["text" => "Needs Guardare+Parlare", "callback_data" => "needsGuardareParlare"],
+    ["text" => "Wants Guardare+Parlare", "callback_data" => "wantsGuardareParlare"]]]];
     $parameters["reply_markup"] = json_encode($keyboard, true);
     echo json_encode($parameters);
 }
@@ -65,12 +67,14 @@ $parameters["method"] = "sendMessage";
 $keyboard = ['inline_keyboard' => $keyboardStructure];
 $keyboardStructure = array(array(array("text" => "Needs Parlare", "callback_data" => "needsParlare"),
     array("text" => "Wants Parlare", "callback_data" => "wantsParlare"),
-    array("text" => "Needs Guardare+Parlare", "callback_data" => "needsGuardareParlare"),
-    array("text" => "Wants Guardare+Parlare", "callback_data" => "wantsGuardareParlare"),),);
+    array(),
+    array(),),);
 
 $parameters["reply_markup"] = json_encode($keyboard, true);
 echo json_encode($parameters);
 */
+
+echo "Valore update = ".$update;
 
 if(callback($update)){
     if(strpos($callbackdata , "needsParlare") === 0){
