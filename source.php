@@ -5,12 +5,17 @@ define('api', 'https://api.telegram.org/bot'.token.'/');
 $data = file_get_contents("php://input");
 $update = json_decode($data, true);
 
-$message = $update["message"];
-$text = $message["text"];
-$cid = $update["message"]["from"]["id"];
 $from = $message["from"];
-$username = $from["username"];
 $nome = $from["first_name"];
+
+$message = isset($update['message']) ? $update['message'] : "";
+$messageid = isset($message['message_id']) ? $message['message_id'] : "";
+$chatid = isset($message['chat']['id']) ? $message['chat']['id'] : "";
+$firstname = isset($message['chat']['first_name']) ? $message['chat']['first_name'] : "";
+$lastname = isset($message['chat']['last_name']) ? $message['chat']['last_name'] : "";
+$username = isset($message['chat']['username']) ? $message['chat']['username'] : "";
+$date = isset($message['date']) ? $message['date'] : "";
+$text = isset($message['text']) ? $message['text'] : "";
 
 $cbid = $update["callback_query"]["from"]["id"];
 $cbdata = $update["callback_query"]["data"];
@@ -59,18 +64,21 @@ $menu = $menud;
     return apiRequest("sendMessage?chat_id=$chat&parse_mode=Markdown&text=$text&reply_markup=$d2");
 }
 
-if($text == "/start"){
-    send($cid, "Benvenuto, sono la tua commessa personale!");
+
+if(strpos($text, "/start") === 0 ) {
+    send($chatid, "Benvenuto, sono la tua commessa personale!");
+    $but[] = array(array("text" => "Needs Guardare", "callback_data" => "needsGuardare"),);
+    $but[] = array(array("text" => "Wants Guardare", "callback_data" => "wantsGuardare"),);
+    $but[] = array(array("text" => "Needs Guardare+Parlare", "callback_data" => "needsGuardareParlare"),);
+    $but[] = array(array("text" => "Wants Guardare+Parlare", "callback_data" => "wantsGuardareParlare"),);
+    inlineKeyboard($but, $chatid, "Scegli che questionario farà la prossima persona!");
+
+} else {
+    send($cid, "Mi spiace ma non sono in grado di capire quel che dici, prova a ripetermelo diversamente!");
 }
 
 if(callback($update)){
     if($cbdata == "ciao1"){
         send($cbid, "hai cliccato il bottone 1");
     }
-
-    $but[] = array(array("text" => "Needs Guardare", "callback_data" => "needsGuardare"),);
-    $but[] = array(array("text" => "Wants Guardare", "callback_data" => "wantsGuardare"),);
-    $but[] = array(array("text" => "Needs Guardare+Parlare", "callback_data" => "needsGuardareParlare"),);
-    $but[] = array(array("text" => "Wants Guardare+Parlare", "callback_data" => "wantsGuardareParlare"),);
-    inlineKeyboard($but, $cid, "Scegli che questionario farà la prossima persona!");
 }
