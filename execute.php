@@ -33,10 +33,9 @@ $needs_parguar = false;
 $wants_par = false;
 $wants_parguar = false;
 
-if(strpos($text, "/start") === 0 )
-{
-    send($chatid, "Benvenuto, sono la tua commessa personale!");
-    sendKeyboard($chatid, "Scegli che questionario farà la prossima persona!");
+if(strpos($text, "/start") === 0 ) {
+    sendKeyboard($chatid, "Benvenuto, sono la tua commessa personale! \n 
+    Scegli che questionario farà la prossima persona!");
 } else {
     send($chatid, "Purtroppo non ho capito cosa mi hai chiesto! Puoi provare a ripetere?");
 }
@@ -52,8 +51,7 @@ function sendKeyboard($chatid, $text) {
     header("Content-Type: application/json");
     $parameters = array('chat_id' => $chatid, "text" => $text);
     $parameters["method"] = "sendMessage";
-    $keyboard = ['inline_keyboard' => [[["text" => "Needs Parlare", "callback_data" => "needsParlare"],
-        ["text" => "Wants Parlare", "callback_data" => "wantsParlare"]]]];
+    $keyboard = ['inline_keyboard' => [[["text" => "Needs Parlare", "callback_data" => "needsParlare"]]]];
     $parameters["reply_markup"] = json_encode($keyboard, true);
     echo json_encode($parameters);
 }
