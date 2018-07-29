@@ -8,8 +8,8 @@ if(!$update)
     exit;
 }
 
-function callback($up){
-    return $up["callback_query"];
+function callback($update){
+    return $update["callback_query"];
 }
 
 $message = isset($update['message']) ? $update['message'] : "";
@@ -19,13 +19,15 @@ $firstname = isset($message['chat']['first_name']) ? $message['chat']['first_nam
 $lastname = isset($message['chat']['last_name']) ? $message['chat']['last_name'] : "";
 $username = isset($message['chat']['username']) ? $message['chat']['username'] : "";
 $date = isset($message['date']) ? $message['date'] : "";
-$text = isset($message['text']) ? $message['text'] : "";
 
+$text = isset($message['text']) ? $message['text'] : "";
 $text = trim($text);
 $text = strtolower($text);
 
 $callbackid = $update["callback_query"]["from"]["id"];
 $callbackdata = $update["callback_query"]["data"];
+
+
 
 
 $needs_par = false;
@@ -51,7 +53,8 @@ function sendKeyboard($chatid, $text) {
     header("Content-Type: application/json");
     $parameters = array('chat_id' => $chatid, "text" => $text);
     $parameters["method"] = "sendMessage";
-    $keyboard = ['inline_keyboard' => [[["text" => "Needs Parlare", "callback_data" => "needsParlare"]]]];
+    $keyboard = ['inline_keyboard' => [[["text" => "Needs Parlare", "callback_data" => "needsParlare"],
+    ["text" => "Wants Parlare", "callback_data" => "wantsParlare"]]]];
     $parameters["reply_markup"] = json_encode($keyboard, true);
     echo json_encode($parameters);
 }
@@ -70,9 +73,9 @@ echo json_encode($parameters);
 */
 
 if(callback($update)){
-    if($callbackdata == "needsParlare"){
+    if(strpos($callbackdata , "needsParlare") === 0){
         $needs_par = true;
-        send($callbackid, "Hai scelto needsParlare, infatti needs par = ".$needs_par);
+        send($chatid, "Hai scelto needsParlare, infatti needs par = ".$needs_par);
     } elseif ($callbackdata == "wantsParlare") {
         $wants_par = true;
         send($callbackid, "Hai scelto wantsParlare, infatti needs par = ".$wants_par);
