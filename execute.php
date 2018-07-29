@@ -8,6 +8,10 @@ if(!$update)
     exit;
 }
 
+function callback($up){
+    return $up["callback_query"];
+}
+
 $message = isset($update['message']) ? $update['message'] : "";
 $messageId = isset($message['message_id']) ? $message['message_id'] : "";
 $chatid = isset($message['chat']['id']) ? $message['chat']['id'] : "";
@@ -20,6 +24,10 @@ $text = isset($message['text']) ? $message['text'] : "";
 $text = trim($text);
 $text = strtolower($text);
 
+$callbackid = $update["callback_query"]["from"]["id"];
+$callbackdata = $update["callback_query"]["data"];
+
+
 $needs_par = false;
 $needs_parguar = false;
 $wants_par = false;
@@ -28,7 +36,7 @@ $wants_parguar = false;
 if(strpos($text, "/start") === 0 )
 {
     send($chatid, "Benvenuto, sono la tua commessa personale!");
-
+    sendKeyboard($chatid, "Scegli che questionario farà la prossima persona!");
 } else {
     send($chatid, "Scusa ma non ho capito! Puoi provare a ripetere?");
 }
@@ -44,11 +52,26 @@ function sendKeyboard($chatid, $text) {
     header("Content-Type: application/json");
     $parameters = array('chat_id' => $chatid, "text" => $text);
     $parameters["method"] = "sendMessage";
-    $keyboardStructure = array(array(array("text" => "Needs Guardare", "callback_data" => "needsGuardare"),
-        array("text" => "Wants Guardare", "callback_data" => "wantsGuardare"),
+    $keyboardStructure = array(array(array("text" => "Needs Parlare", "callback_data" => "needsParlare"),
+        array("text" => "Wants Parlare", "callback_data" => "wantsParlare"),
         array("text" => "Needs Guardare+Parlare", "callback_data" => "needsGuardareParlare"),
         array("text" => "Wants Guardare+Parlare", "callback_data" => "wantsGuardareParlare"),),);
     $keyboard = ['inline_keyboard' => $keyboardStructure];
     $parameters["reply_markup"] = json_encode($keyboard, true);
 }
 
+if(callback($update)){
+    if($callbackdata == "needsParlare"){
+        $needs_par = true;
+        send($callbackid, "Hai scelto needsParlare, infatti needs par = ".$needs_par);
+    } elseif ($callbackdata == "wantsParlare") {
+        $wants_par = true;
+        send($callbackid, "Hai scelto wantsParlare, infatti needs par = ".$wants_par);
+    } elseif ($callbackdata == "needsGuardareParlare") {
+        $needs_parguar = true;
+        send($callbackid, "Hai scelto needsGuardareParlare, infatti needs par = ".$needs_parguar);
+    } elseif ($callbackdata == "wantsGuardareParlare") {
+        $wants_parguar = true;
+        send($callbackid, "Hai scelto wantsGuardareParlare, infatti needs par = ".$wants_parguar);
+    }
+}
