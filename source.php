@@ -5,14 +5,13 @@ define('api', 'https://api.telegram.org/bot'.token.'/');
 $data = file_get_contents("php://input");
 $update = json_decode($data, true);
 
-$message = isset($update['message']) ? $update['message'] : "";
-$messageid = isset($message['message_id']) ? $message['message_id'] : "";
-$chatid = isset($message['chat']['id']) ? $message['chat']['id'] : "";
-$firstname = isset($message['chat']['first_name']) ? $message['chat']['first_name'] : "";
-$lastname = isset($message['chat']['last_name']) ? $message['chat']['last_name'] : "";
-$username = isset($message['chat']['username']) ? $message['chat']['username'] : "";
-$date = isset($message['date']) ? $message['date'] : "";
-$text = isset($message['text']) ? $message['text'] : "";
+$message = $update["message"];
+$text = $message["text"];
+$cid = $update["message"]["from"]["id"];
+$from = $message["from"];
+$username = $from["username"];
+$nome = $from["first_name"];
+$cognome = $form["last_name"];
 
 $cbid = $update["callback_query"]["from"]["id"];
 $cbdata = $update["callback_query"]["data"];
@@ -31,6 +30,18 @@ function send($id, $text){
         $text = urlencode($text);
     }
     return apiRequest("sendMessage?text=$text&parse_mode=HTML&chat_id=$id");
+}
+
+function keyboard($tasti, $text, $cd){
+$tasti2 = $tasti;
+
+$tasti3 = json_encode($tasti2);
+
+    if(strpos($text, "\n")){
+        $text = urlencode($text);
+    }
+
+apiRequest("sendMessage?text=$text&parse_mode=Markdown&chat_id=$cd&reply_markup=$tasti3");
 }
 
 function inlinekeyboard($menud, $chat, $text){
