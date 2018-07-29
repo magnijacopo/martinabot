@@ -30,9 +30,10 @@ function apiRequest($metodo){
 }
 
 function send($chatid, $text){
+    header("Content-Type: application/json");
     $parameters = array('chat_id' => $chatid, "text" => $text);
     $parameters["method"] = "sendMessage";
-    return json_encode($parameters);
+    echo json_encode($parameters);
 }
 
 function keyboard($tasti, $text, $cd){
