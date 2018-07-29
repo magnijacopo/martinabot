@@ -3,13 +3,8 @@
 $content = file_get_contents("php://input");
 $update = json_decode($content, true);
 
-if(!$update)
-{
+if(!$update) {
     exit;
-}
-
-function callback($update){
-    return $update["callback_query"];
 }
 
 $message = isset($update['message']) ? $update['message'] : "";
@@ -27,9 +22,6 @@ $text = strtolower($text);
 $callbackid = $update["callback_query"]["from"]["id"];
 $callbackdata = $update["callback_query"]["data"];
 
-
-
-
 $needs_par = false;
 $needs_parguar = false;
 $wants_par = false;
@@ -40,6 +32,10 @@ if(strpos($text, "/start") === 0 ) {
     Scegli che questionario farà la prossima persona!");
 } else {
     send($chatid, "Purtroppo non ho capito cosa mi hai chiesto! Puoi provare a ripetere?");
+}
+
+function callback($update){
+    return $update["callback_query"];
 }
 
 function send($chatid, $text){
@@ -74,9 +70,7 @@ $parameters["reply_markup"] = json_encode($keyboard, true);
 echo json_encode($parameters);
 */
 
-echo "Valore update = ".$update;
-
-if(callback($update)){
+if(callback($update) != null){
     if(strpos($callbackdata , "needsParlare") === 0){
         $needs_par = true;
         send($chatid, "Hai scelto needsParlare, infatti needs par = ".$needs_par);
