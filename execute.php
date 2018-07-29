@@ -58,6 +58,7 @@ function sendKeyboard($chatid, $text) {
         array("text" => "Wants Guardare+Parlare", "callback_data" => "wantsGuardareParlare"),),);
     $keyboard = ['inline_keyboard' => $keyboardStructure];
     $parameters["reply_markup"] = json_encode($keyboard, true);
+    echo json_encode($parameters);
 }
 
 if(callback($update)){
