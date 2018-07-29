@@ -40,3 +40,15 @@ function send($chatid, $text){
     echo json_encode($parameters);
 }
 
+function sendKeyboard($chatid, $text) {
+    header("Content-Type: application/json");
+    $parameters = array('chat_id' => $chatid, "text" => $text);
+    $parameters["method"] = "sendMessage";
+    $keyboardStructure = array(array(array("text" => "Needs Guardare", "callback_data" => "needsGuardare"),
+        array("text" => "Wants Guardare", "callback_data" => "wantsGuardare"),
+        array("text" => "Needs Guardare+Parlare", "callback_data" => "needsGuardareParlare"),
+        array("text" => "Wants Guardare+Parlare", "callback_data" => "wantsGuardareParlare"),),);
+    $keyboard = ['inline_keyboard' => $keyboardStructure];
+    $parameters["reply_markup"] = json_encode($keyboard, true);
+}
+
