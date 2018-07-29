@@ -30,7 +30,7 @@ if(strpos($text, "/start") === 0 )
     send($chatid, "Benvenuto, sono la tua commessa personale!");
 
 } else {
-    $response = trim($text);
+    send($chatid, "Scusa ma non ho capito! Puoi provare a ripetere?");
 }
 
 function send($chatid, $text){
@@ -39,10 +39,4 @@ function send($chatid, $text){
     $parameters["method"] = "sendMessage";
     echo json_encode($parameters);
 }
-
-header("Content-Type: application/json");
-$parameters = array('chat_id' => $chatId, "text" => $response);
-
-$parameters["method"] = "sendMessage";
-echo json_encode($parameters);
 
