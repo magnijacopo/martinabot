@@ -38,7 +38,7 @@ if(strpos($text, "/start") === 0 )
     send($chatid, "Benvenuto, sono la tua commessa personale!");
     sendKeyboard($chatid, "Scegli che questionario farà la prossima persona!");
 } else {
-    send($chatid, "Scusa ma non ho capito! Puoi provare a ripetere?");
+    send($chatid, "Purtroppo non ho capito cosa mi hai chiesto! Puoi provare a ripetere?");
 }
 
 function send($chatid, $text){
@@ -52,14 +52,24 @@ function sendKeyboard($chatid, $text) {
     header("Content-Type: application/json");
     $parameters = array('chat_id' => $chatid, "text" => $text);
     $parameters["method"] = "sendMessage";
-    $keyboardStructure = array(array(array("text" => "Needs Parlare", "callback_data" => "needsParlare"),
-        array("text" => "Wants Parlare", "callback_data" => "wantsParlare"),
-        array("text" => "Needs Guardare+Parlare", "callback_data" => "needsGuardareParlare"),
-        array("text" => "Wants Guardare+Parlare", "callback_data" => "wantsGuardareParlare"),),);
-    $keyboard = ['inline_keyboard' => $keyboardStructure];
+    $keyboard = ['inline_keyboard' => [[["text" => "Needs Parlare", "callback_data" => "needsParlare"],
+        ["text" => "Wants Parlare", "callback_data" => "wantsParlare"]]]];
     $parameters["reply_markup"] = json_encode($keyboard, true);
     echo json_encode($parameters);
 }
+
+/* header("Content-Type: application/json");
+$parameters = array('chat_id' => $chatId, "text" => $text);
+$parameters["method"] = "sendMessage";
+$keyboard = ['inline_keyboard' => $keyboardStructure];
+$keyboardStructure = array(array(array("text" => "Needs Parlare", "callback_data" => "needsParlare"),
+    array("text" => "Wants Parlare", "callback_data" => "wantsParlare"),
+    array("text" => "Needs Guardare+Parlare", "callback_data" => "needsGuardareParlare"),
+    array("text" => "Wants Guardare+Parlare", "callback_data" => "wantsGuardareParlare"),),);
+
+$parameters["reply_markup"] = json_encode($keyboard, true);
+echo json_encode($parameters);
+*/
 
 if(callback($update)){
     if($callbackdata == "needsParlare"){
