@@ -1,13 +1,5 @@
 <?php
 
-$content = file_get_contents("php://input");
-$update = json_decode($content, true);
-
-if(!$update)
-{
-    exit;
-}
-
 $message = isset($update['message']) ? $update['message'] : "";
 $messageid = isset($message['message_id']) ? $message['message_id'] : "";
 $chatid = isset($message['chat']['id']) ? $message['chat']['id'] : "";
