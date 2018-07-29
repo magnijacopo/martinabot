@@ -11,7 +11,6 @@ $cid = $update["message"]["from"]["id"];
 $from = $message["from"];
 $username = $from["username"];
 $nome = $from["first_name"];
-$cognome = $form["last_name"];
 
 $cbid = $update["callback_query"]["from"]["id"];
 $cbdata = $update["callback_query"]["data"];
@@ -58,4 +57,20 @@ $menu = $menud;
     $d2 = json_encode($d2);
     
     return apiRequest("sendMessage?chat_id=$chat&parse_mode=Markdown&text=$text&reply_markup=$d2");
+}
+
+if($text == "/start"){
+    send($cid, "Benvenuto, sono la tua commessa personale!");
+}
+
+if(callback($update)){
+    if($cbdata == "ciao1"){
+        send($cbid, "hai cliccato il bottone 1");
+    }
+
+    $but[] = array(array("text" => "Needs Guardare", "callback_data" => "needsGuardare"),);
+    $but[] = array(array("text" => "Wants Guardare", "callback_data" => "wantsGuardare"),);
+    $but[] = array(array("text" => "Needs Guardare+Parlare", "callback_data" => "needsGuardareParlare"),);
+    $but[] = array(array("text" => "Wants Guardare+Parlare", "callback_data" => "wantsGuardareParlare"),);
+    inlineKeyboard($but, $cid, "Scegli che questionario farà la prossima persona!");
 }
