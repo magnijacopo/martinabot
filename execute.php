@@ -81,6 +81,7 @@ if ($tipo_questionario != 0) {
     if(strpos($text, "/stop") === 0 ){
         send($chatid, "Ok, cancello tutto. Scrivi /start per iniziare un nuovo questionario");
         setTipoQuestionario(0, "variables.json");
+        setDiscorsoIniziato(false, "variables.json");
     }
 
     switch ($tipo_questionario) {
@@ -100,7 +101,7 @@ if ($tipo_questionario != 0) {
                 }
             }
             if ( strpos($text, "ok") !== false || strpos($text, "si") !== false || strpos($text, "bene") !== false
-            || strpos($text, "aiuto") === 0 ){
+            || strpos($text, "aiuto") === 0  || strpos($text, "montagna") !== false){
                 if($discorso_iniziato == false) {
                     send($chatid, "Perfetto, cosa stai cercando?");
                     setDiscorsoIniziato(true, "variables.json");
