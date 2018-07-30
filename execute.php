@@ -22,27 +22,83 @@ $text = strtolower($text);
 $callbackid = $update["callback_query"]["from"]["id"];
 $callbackdata = $update["callback_query"]["data"];
 
-$needs_par = false;
-$needs_parguar = false;
-$wants_par = false;
-$wants_parguar = false;
+/*
+1 = Needs Parlare
+2 = Needs Parlare e Guardare
+3 = Wants Parlare
+4 = Wants Parlare e Guardare");
+*/
+$tipo_questionario = 0;
 
-if(strpos($text, "/start") === 0 ) {
-    sendKeyboard($chatid, "Benvenuto, sono la tua commessa personale! \n 
-    Scegli che questionario farà la prossima persona!");
-} else {
-    send($chatid, "Purtroppo non ho capito cosa mi hai chiesto! Puoi provare a ripetere?");
+if($tipo_questionario == 0) {
+    //Inizia la conversazione
+    if(strpos($text, "/start") === 0 ) {
+        send($chatid, "Benvenuto, sono la tua commessa personale! 
+    \nScegli che questionario farà la prossima persona!
+    \nRicordati:
+    \n1 = Needs Parlare
+    \n2 = Needs Parlare e Guardare
+    \n3 = Wants Parlare
+    \n4 = Wants Parlare e Guardare
+    \nQuando hai finito un questionario per favore scrivi /stop");
+    }
+    //Setta il tipo di questionario
+    if(strpos($text, "1") === 0) {
+        $tipo_questionario = 1;
+        send($chatid, "Hai scelto Needs Parlare, inizio subito a chiedere aiuto al cliente!");
+    } elseif(strpos($text, "2") === 0) {
+        $tipo_questionario = 2;
+        send($chatid, "Hai scelto Needs Parlare e Guardare, osservo un po' il cliente e poi gli parlerò");
+    } elseif(strpos($text, "3") === 0) {
+        $tipo_questionario = 3;
+        send($chatid, "Hai scelto Wants Parlare, inizio subito a chiedere aiuto al cliente!");
+    } elseif(strpos($text, "4") === 0) {
+        $tipo_questionario = 4;
+        send($chatid, "Hai scelto Wants Parlare e Guardare, osservo un po' il cliente e poi gli parlerò");
+    }
 }
 
-function callback($update){
-    return $update["callback_query"];
+if ($tipo_questionario != 0) {
+
+    if(strpos($text, "/stop") === 0 ){
+        send($chatid, "Ok, cancello tutto. Scrivi /start per iniziare un nuovo questionario");
+        $tipo_questionario = 0;
+    } else {
+        send($chatid, "Hei, aspetta, sto ancora sviluppando queste funzionalità!!");
+    }
 }
+
 
 function send($chatid, $text){
     header("Content-Type: application/json");
     $parameters = array('chat_id' => $chatid, "text" => $text);
     $parameters["method"] = "sendMessage";
     echo json_encode($parameters);
+}
+
+
+
+
+
+
+
+/*
+
+header("Content-Type: application/json");
+$parameters = array('chat_id' => $chatId, "text" => $text);
+$parameters["method"] = "sendMessage";
+$keyboard = ['inline_keyboard' => $keyboardStructure];
+$keyboardStructure = array(array(array("text" => "Needs Parlare", "callback_data" => "needsParlare"),
+    array("text" => "Wants Parlare", "callback_data" => "wantsParlare"),
+    array(),
+    array(),),);
+
+$parameters["reply_markup"] = json_encode($keyboard, true);
+echo json_encode($parameters);
+
+
+function callback($update){
+    return $update["callback_query"];
 }
 
 function sendKeyboard($chatid, $text) {
@@ -57,20 +113,7 @@ function sendKeyboard($chatid, $text) {
     echo json_encode($parameters);
 }
 
-/* header("Content-Type: application/json");
-$parameters = array('chat_id' => $chatId, "text" => $text);
-$parameters["method"] = "sendMessage";
-$keyboard = ['inline_keyboard' => $keyboardStructure];
-$keyboardStructure = array(array(array("text" => "Needs Parlare", "callback_data" => "needsParlare"),
-    array("text" => "Wants Parlare", "callback_data" => "wantsParlare"),
-    array(),
-    array(),),);
-
-$parameters["reply_markup"] = json_encode($keyboard, true);
-echo json_encode($parameters);
-*/
-
-if(callback($update) != null){
+if(callback($update) != null) {
     if(strpos($callbackdata , "needsParlare") === 0){
         $needs_par = true;
         send($chatid, "Hai scelto needsParlare, infatti needs par = ".$needs_par);
@@ -85,3 +128,4 @@ if(callback($update) != null){
         send($callbackid, "Hai scelto wantsGuardareParlare, infatti needs par = ".$wants_parguar);
     }
 }
+*/
