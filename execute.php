@@ -48,7 +48,7 @@ if($tipo_questionario == 0) {
     //Setta il tipo di questionario
     if(strpos($text, "1") === 0) {
         setTipoQuestionario(1, "variables.json");
-        send($chatid, "Hai scelto Needs Parlare, inizio subito a chiedere aiuto al cliente! tipo = ".$tipo_questionario);
+        send($chatid, "Hai scelto Needs Parlare! Scrivi ok, e inizierò a parlare al cliente!");
     } elseif(strpos($text, "2") === 0) {
         setTipoQuestionario(2, "variables.json");
         send($chatid, "Hai scelto Needs Parlare e Guardare, osservo un po' il cliente e poi gli parlerò");
@@ -73,9 +73,37 @@ if ($tipo_questionario != 0) {
     if(strpos($text, "/stop") === 0 ){
         send($chatid, "Ok, cancello tutto. Scrivi /start per iniziare un nuovo questionario");
         setTipoQuestionario(0, "variables.json");
-    } else {
-        send($chatid, "Siamo ancora in fase di test, non avere fretta");
     }
+
+    switch ($tipo_questionario) {
+        // 1 = Needs Parlare
+        case 1:
+            if (strpos($text, "inizia") === 0) {
+                sleep(15);
+                send($chatid, "Benvenuto! Posso aiutarti?");
+            }
+            if (strpos($text, "no") !== false) {
+                send($chatid, "Va bene, se hai bisogno sono disponibile! Scrivimi aiuto");
+            }
+            if ( strpos($text, "ok") !== false || strpos($text, "si") !== false || strpos($text, "bene") !== false
+            || strpos($text, "aiuto") === 0 ){
+                send($chatid, "Perfetto, cosa stai cercando?");
+            }
+            break;
+
+
+
+        case 2:
+            send($chatid, "Stiamo ancora sviluppando questo questionario");
+            break;
+        case 3:
+            send($chatid, "Stiamo ancora sviluppando questo questionario");
+            break;
+        case 4:
+            send($chatid, "Stiamo ancora sviluppando questo questionario");
+            break;
+    }
+
 }
 
 
