@@ -1,5 +1,7 @@
 <?php
 
+include 'variables.php';
+
 $content = file_get_contents("php://input");
 $update = json_decode($content, true);
 
@@ -28,7 +30,6 @@ $callbackdata = $update["callback_query"]["data"];
 3 = Wants Parlare
 4 = Wants Parlare e Guardare");
 */
-$tipo_questionario = 0;
 
 if($tipo_questionario == 0) {
     //Inizia la conversazione
