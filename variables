@@ -1,4 +1,5 @@
 {
   "tipo_questionario" : 0,
-  "discorso_iniziato" : false
+  "discorso_iniziato" : false,
+  "sesso" : "X"
 }

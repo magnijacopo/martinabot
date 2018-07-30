@@ -7,6 +7,7 @@ $variables_file = file_get_contents("variables.json");
 $variables = json_decode($variables_file, true);
 $tipo_questionario = $variables['tipo_questionario'];
 $discorso_iniziato = $variables['discorso_iniziato'];
+$sesso = $variables['sesso'];
 
 if(!$update) {
     exit;
@@ -76,6 +77,13 @@ function setDiscorsoIniziato($value, $file) {
     file_put_contents($file, json_encode($variables));
 }
 
+function setSesso($value, $file) {
+    $variables_file = file_get_contents("variables.json");
+    $variables = json_decode($variables_file, true);
+    $variables['sesso'] = $value;
+    file_put_contents($file, json_encode($variables));
+}
+
 if ($tipo_questionario != 0) {
 
     if(strpos($text, "/stop") === 0 ){
@@ -90,6 +98,11 @@ if ($tipo_questionario != 0) {
             if (strpos($text, "inizia") === 0) {
                 sleep(25);
                 send($chatid, "Benvenuto! Posso aiutarti?");
+            }
+            if (strpos($text, "uomo") !== false ) {
+                send($chatid, "Secondo me il modello NH500 30L è quello più adatto a te!");
+            } elseif (strpos($text, "donna") !== false ) {
+                send($chatid, "Secondo me il modello MH100 30L è quello più adatto a te!");
             }
             if (strpos($text, "no") === 0) {
                 if ($discorso_iniziato == false) {
@@ -118,11 +131,6 @@ if ($tipo_questionario != 0) {
                 || strpos($text, "resistente") !== false || strpos($text, "nessuna") !== false ) {
                 send($chatid, "Lo vorresti da uomo o da donna?");
             }
-            if (strpos($text, "uomo") !== false ) {
-                send($chatid, "Secondo me il modello NH500 30L è quello più adatto a te!");
-            } elseif (strpos($text, "donna") !== false ) {
-                send($chatid, "Secondo me il modello MH100 30L è quello più adatto a te!");
-            }
             break;
 
         // 2 = Needs Parlare e Guardare
@@ -131,22 +139,26 @@ if ($tipo_questionario != 0) {
                 sleep(60);
                 send($chatid, "Ciao! Ho visto che stai guardando degli zaini, posso aiutarti a scegliere?");
             }
-            if (strpos($text, "no") !== false) {
+            if (strpos($text, "uomo") !== false ) {
+                send($chatid, "Secondo me il modello NH500 30L è quello più adatto a te!");
+            } elseif (strpos($text, "donna") !== false ) {
+                send($chatid, "Secondo me il modello MH100 30L è quello più adatto a te!");
+            }
+            if (strpos($text, "no") === 0) {
                 if ($discorso_iniziato == false) {
                     send($chatid, "Va bene, se hai bisogno sono disponibile! Scrivimi aiuto");
-                }
-                if ($discorso_iniziato == true) {
+                } elseif ($discorso_iniziato == true) {
                     send($chatid, "Ok, hai in mente altre caratteristiche?
-                    \nImpermeabile, capiente, resistente? Dimmi con che caratteristiche lo vorresti");
+                    \nImpermeabile, capiente, resistente? Dimmi con che caratteristiche lo vorresti
+                    \nSe non ti interessa nessuna caratteristica particolare dimmi nessuna");
                 }
             }
             if ( strpos($text, "ok") !== false || strpos($text, "si") !== false || strpos($text, "bene") !== false
-                || strpos($text, "aiuto") === 0 ){
+                || strpos($text, "aiuto") === 0  || strpos($text, "montagna") !== false){
                 if($discorso_iniziato == false) {
                     send($chatid, "Perfetto, cosa stai cercando?");
                     setDiscorsoIniziato(true, "variables.json");
-                }
-                if ($discorso_iniziato == true) {
+                } elseif ($discorso_iniziato == true) {
                     send($chatid, "Ok, hai in mente altre caratteristiche?
                     \nImpermeabile, capiente, resistente? Dimmi con che caratteristiche lo vorresti. 
                     \nSe non ti interessa nessuna caratteristica particolare dimmi nessuna");
@@ -159,17 +171,68 @@ if ($tipo_questionario != 0) {
                 || strpos($text, "resistente") !== false || strpos($text, "nessuna") !== false ) {
                 send($chatid, "Lo vorresti da uomo o da donna?");
             }
-            if (strpos($text, "uomo") !== false ) {
-                send($chatid, "Secondo me il modello NH500 30L è quello più adatto a te!");
-            } elseif (strpos($text, "donna") !== false ) {
-                send($chatid, "Secondo me il modello MH100 30L è quello più adatto a te!");
-            }
             break;
 
-
+        // 3 = Wants Parlare
         case 3:
-            send($chatid, "Stiamo ancora sviluppando questo questionario");
-            break;
+            if (strpos($text, "inizia") === 0) {
+                sleep(25);
+                send($chatid, "Benvenuto! Posso aiutarti?");
+            }
+            if (strpos($text, "uomo") !== false ) {
+                send($chatid, "Che colore preferisci tra grigio chiaro, grigio scuro, blu e bianco?");
+                setSesso("M", "variables.json");
+            } elseif (strpos($text, "donna") !== false ) {
+                send($chatid, "Che colore preferisci tra grigio, rosa, verde e blu?");
+                setSesso("F", "variables.json");
+            }
+            if (strpos($text, "no") === 0) {
+                if ($discorso_iniziato == false) {
+                    send($chatid, "Va bene, se hai bisogno sono disponibile! Scrivimi aiuto");
+                }
+            }
+            if ( strpos($text, "ok") !== false || strpos($text, "si") !== false || strpos($text, "bene") !== false
+                || strpos($text, "aiuto") === 0 ){
+                if($discorso_iniziato == false) {
+                    send($chatid, "Perfetto, cosa stai cercando?");
+                    setDiscorsoIniziato(true, "variables.json");
+                }
+            }
+            if (strpos($text, "maglia") !== false || strpos($text, "maglietta") !== false) {
+                send($chatid, "Ti serve da uomo o da donna?");
+            } elseif (strpos($text, "niente")) {
+                send($chatid, "Sei sicuro? Abbiamo delle belle magliette, se ti interessano scrivimi maglietta");
+            }
+            if ($sesso == "M") {
+                if (strpos($text, "chiaro") !== false) {
+                    send($chatid, "La maglietta numero 1 è la più adatta a te!");
+                } elseif (strpos($text, "scuro") !== false) {
+                    send($chatid, "La maglietta numero 6 è la più adatta a te!");
+                } elseif (strpos($text, "bianco") !== false) {
+                    send($chatid, "La maglietta numero 8 è la più adatta a te!");
+                } elseif (strpos($text, "blu") !== false) {
+                    send($chatid, "La maglietta numero 2 è la più adatta a te!");
+                } elseif (strpos($text, "nessuno") !== false) {
+                    send($chatid, "Mi spiace ma non so proprio consigliarti che maglietta ti andrebbe bene. 
+                    \nLe abbiamo solo di quei colori.");
+                }
+            } elseif ($sesso == "F") {
+                if (strpos($text, "verde") !== false) {
+                    send($chatid, "La maglietta numero 5 è la più adatta a te!");
+                } elseif (strpos($text, "rosa") !== false) {
+                    send($chatid, "La maglietta numero 3 è la più adatta a te!");
+                } elseif (strpos($text, "grigio") !== false) {
+                    send($chatid, "La maglietta numero 2 è la più adatta a te!");
+                } elseif (strpos($text, "blu") !== false) {
+                    send($chatid, "La maglietta numero 7 è la più adatta a te!");
+                } elseif (strpos($text, "nessuno") !== false) {
+                    send($chatid, "Mi spiace ma non so proprio consigliarti che maglietta ti andrebbe bene. 
+                        \nLe abbiamo solo di quei colori.");
+                }
+            }
+        break;
+
+
         case 4:
             send($chatid, "Stiamo ancora sviluppando questo questionario");
             break;
