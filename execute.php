@@ -1,9 +1,11 @@
 <?php
 
-include 'variables.php';
-
 $content = file_get_contents("php://input");
 $update = json_decode($content, true);
+
+$variables_file = file_get_contents("variables.json");
+$variables = json_decode($variables_file, true);
+$tipo_questionario = $variables['$tipo_questionario'];
 
 if(!$update) {
     exit;
@@ -45,27 +47,34 @@ if($tipo_questionario == 0) {
     }
     //Setta il tipo di questionario
     if(strpos($text, "1") === 0) {
-        $tipo_questionario = 1;
-        send($chatid, "Hai scelto Needs Parlare, inizio subito a chiedere aiuto al cliente!");
+        setTipoQuestionario(1, "variables.json");
+        send($chatid, "Hai scelto Needs Parlare, inizio subito a chiedere aiuto al cliente! tipo = ".$tipo_questionario);
     } elseif(strpos($text, "2") === 0) {
-        $tipo_questionario = 2;
+        setTipoQuestionario(2, "variables.json");
         send($chatid, "Hai scelto Needs Parlare e Guardare, osservo un po' il cliente e poi gli parlerò");
     } elseif(strpos($text, "3") === 0) {
-        $tipo_questionario = 3;
+        setTipoQuestionario(3, "variables.json");
         send($chatid, "Hai scelto Wants Parlare, inizio subito a chiedere aiuto al cliente!");
     } elseif(strpos($text, "4") === 0) {
-        $tipo_questionario = 4;
+        setTipoQuestionario(4, "variables.json");
         send($chatid, "Hai scelto Wants Parlare e Guardare, osservo un po' il cliente e poi gli parlerò");
     }
+}
+
+function setTipoQuestionario($tipo, $file) {
+    $variables_file = file_get_contents("variables.json");
+    $variables = json_decode($variables_file, true);
+    $variables['$tipo_questionario'] = $tipo;
+    file_put_contents($file, json_encode($variables));
 }
 
 if ($tipo_questionario != 0) {
 
     if(strpos($text, "/stop") === 0 ){
         send($chatid, "Ok, cancello tutto. Scrivi /start per iniziare un nuovo questionario");
-        $tipo_questionario = 0;
+        setTipoQuestionario(0, "variables.json");
     } else {
-        send($chatid, "Hei, aspetta, sto ancora sviluppando queste funzionalità!!");
+        send($chatid, "Siamo ancora in fase di test, non avere fretta");
     }
 }
 
