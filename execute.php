@@ -49,16 +49,16 @@ if($tipo_questionario == 0) {
     //Setta il tipo di questionario
     if(strpos($text, "1") === 0) {
         setTipoQuestionario(1, "variables.json");
-        send($chatid, "Hai scelto Needs Parlare! Scrivi ok, e inizierò a parlare al cliente!");
+        send($chatid, "Hai scelto Needs Parlare! Scrivi inizia, e inizierò a parlare al cliente!");
     } elseif(strpos($text, "2") === 0) {
         setTipoQuestionario(2, "variables.json");
-        send($chatid, "Hai scelto Needs Parlare e Guardare, osservo un po' il cliente e poi gli parlerò");
+        send($chatid, "Hai scelto Needs Parlare e Guardare, scrivi inizia, osserverò un po' il cliente e poi gli parlerò!");
     } elseif(strpos($text, "3") === 0) {
         setTipoQuestionario(3, "variables.json");
-        send($chatid, "Hai scelto Wants Parlare, inizio subito a chiedere aiuto al cliente!");
+        send($chatid, "Hai scelto Wants Parlare, Scrivi inizia, e inizierò a parlare al cliente!");
     } elseif(strpos($text, "4") === 0) {
         setTipoQuestionario(4, "variables.json");
-        send($chatid, "Hai scelto Wants Parlare e Guardare, osservo un po' il cliente e poi gli parlerò");
+        send($chatid, "Hai scelto Wants Parlare e Guardare, scrivi inizia, osserverò un po' il cliente e poi gli parlerò!");
     }
 }
 
@@ -87,16 +87,16 @@ if ($tipo_questionario != 0) {
         // 1 = Needs Parlare
         case 1:
             if (strpos($text, "inizia") === 0) {
-                sleep(20);
+                sleep(25);
                 send($chatid, "Benvenuto! Posso aiutarti?");
             }
-            if (strpos($text, "no") !== false) {
+            if (strpos($text, "no") === 0) {
                 if ($discorso_iniziato == false) {
                     send($chatid, "Va bene, se hai bisogno sono disponibile! Scrivimi aiuto");
-                }
-                if ($discorso_iniziato == true) {
+                } elseif ($discorso_iniziato == true) {
                     send($chatid, "Ok, hai in mente altre caratteristiche?
-                    \nImpermeabile, capiente, resistente? Dimmi con che caratteristiche lo vorresti");
+                    \nImpermeabile, capiente, resistente? Dimmi con che caratteristiche lo vorresti
+                    \nSe non ti interessa nessuna caratteristica particolare dimmi nessuna");
                 }
             }
             if ( strpos($text, "ok") !== false || strpos($text, "si") !== false || strpos($text, "bene") !== false
@@ -104,8 +104,7 @@ if ($tipo_questionario != 0) {
                 if($discorso_iniziato == false) {
                     send($chatid, "Perfetto, cosa stai cercando?");
                     setDiscorsoIniziato(true, "variables.json");
-                }
-                if ($discorso_iniziato == true) {
+                } elseif ($discorso_iniziato == true) {
                     send($chatid, "Ok, hai in mente altre caratteristiche?
                     \nImpermeabile, capiente, resistente? Dimmi con che caratteristiche lo vorresti. 
                     \nSe non ti interessa nessuna caratteristica particolare dimmi nessuna");
