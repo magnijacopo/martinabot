@@ -60,6 +60,8 @@ if($tipo_questionario == 0) {
     } elseif(strpos($text, "4") === 0) {
         setTipoQuestionario(4, "variables.json");
         send($chatid, "Hai scelto Wants Parlare e Guardare, scrivi inizia, osserverò un po' il cliente e poi gli parlerò!");
+    } else {
+        send($chatid, "Devi selezionare un questionario, premi 1,2,3,4");
     }
 }
 
@@ -84,12 +86,18 @@ function setSesso($value, $file) {
     file_put_contents($file, json_encode($variables));
 }
 
+function sendErrorMessage($chatid) {
+    send($chatid, "Mi spiace, ma non riesco a capire quello che mi hai scritto. 
+    \nPuoi provare a ripetere, o a seguire le istruzioni?");
+}
+
 if ($tipo_questionario != 0) {
 
     if(strpos($text, "/stop") === 0 ){
         send($chatid, "Ok, cancello tutto. Scrivi /start per iniziare un nuovo questionario");
         setTipoQuestionario(0, "variables.json");
         setDiscorsoIniziato(false, "variables.json");
+        setSesso("X", "variables.json");
     }
 
     switch ($tipo_questionario) {
