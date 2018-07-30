@@ -1,3 +1,4 @@
 {
-  "tipo_questionario" : 0
+  "tipo_questionario" : 0,
+  "discorso_iniziato" : false
 }

@@ -5,7 +5,8 @@ $update = json_decode($content, true);
 
 $variables_file = file_get_contents("variables.json");
 $variables = json_decode($variables_file, true);
-$tipo_questionario = $variables['$tipo_questionario'];
+$tipo_questionario = $variables['tipo_questionario'];
+$discorso_iniziato = $variables['discorso_iniziato'];
 
 if(!$update) {
     exit;
@@ -64,7 +65,14 @@ if($tipo_questionario == 0) {
 function setTipoQuestionario($tipo, $file) {
     $variables_file = file_get_contents("variables.json");
     $variables = json_decode($variables_file, true);
-    $variables['$tipo_questionario'] = $tipo;
+    $variables['tipo_questionario'] = $tipo;
+    file_put_contents($file, json_encode($variables));
+}
+
+function setDiscorsoIniziato($value, $file) {
+    $variables_file = file_get_contents("variables.json");
+    $variables = json_decode($variables_file, true);
+    $variables['discorso_iniziato'] = $value;
     file_put_contents($file, json_encode($variables));
 }
 
@@ -79,23 +87,86 @@ if ($tipo_questionario != 0) {
         // 1 = Needs Parlare
         case 1:
             if (strpos($text, "inizia") === 0) {
-                sleep(15);
+                sleep(20);
                 send($chatid, "Benvenuto! Posso aiutarti?");
             }
             if (strpos($text, "no") !== false) {
-                send($chatid, "Va bene, se hai bisogno sono disponibile! Scrivimi aiuto");
+                if ($discorso_iniziato == false) {
+                    send($chatid, "Va bene, se hai bisogno sono disponibile! Scrivimi aiuto");
+                }
+                if ($discorso_iniziato == true) {
+                    send($chatid, "Ok, hai in mente altre caratteristiche?
+                    \nImpermeabile, capiente, resistente? Dimmi con che caratteristiche lo vorresti");
+                }
             }
             if ( strpos($text, "ok") !== false || strpos($text, "si") !== false || strpos($text, "bene") !== false
             || strpos($text, "aiuto") === 0 ){
-                send($chatid, "Perfetto, cosa stai cercando?");
+                if($discorso_iniziato == false) {
+                    send($chatid, "Perfetto, cosa stai cercando?");
+                    setDiscorsoIniziato(true, "variables.json");
+                }
+                if ($discorso_iniziato == true) {
+                    send($chatid, "Ok, hai in mente altre caratteristiche?
+                    \nImpermeabile, capiente, resistente? Dimmi con che caratteristiche lo vorresti. 
+                    \nSe non ti interessa nessuna caratteristica particolare dimmi nessuna");
+                }
+            }
+            if (strpos($text, "zaino") !== false || strpos($text, "zainetto") !== false) {
+                send($chatid, "Ti serve per una escursione in montagna?");
+            }
+            if ( strpos($text, "impermeabile") !== false || strpos($text, "capiente") !== false
+                || strpos($text, "resistente") !== false || strpos($text, "nessuna") !== false ) {
+                send($chatid, "Lo vorresti da uomo o da donna?");
+            }
+            if (strpos($text, "uomo") !== false ) {
+                send($chatid, "Secondo me il modello NH500 30L è quello più adatto a te!");
+            } elseif (strpos($text, "donna") !== false ) {
+                send($chatid, "Secondo me il modello MH100 30L è quello più adatto a te!");
+            }
+            break;
+
+        // 2 = Needs Parlare e Guardare
+        case 2:
+            if (strpos($text, "inizia") === 0) {
+                sleep(60);
+                send($chatid, "Ciao! Ho visto che stai guardando degli zaini, posso aiutarti a scegliere?");
+            }
+            if (strpos($text, "no") !== false) {
+                if ($discorso_iniziato == false) {
+                    send($chatid, "Va bene, se hai bisogno sono disponibile! Scrivimi aiuto");
+                }
+                if ($discorso_iniziato == true) {
+                    send($chatid, "Ok, hai in mente altre caratteristiche?
+                    \nImpermeabile, capiente, resistente? Dimmi con che caratteristiche lo vorresti");
+                }
+            }
+            if ( strpos($text, "ok") !== false || strpos($text, "si") !== false || strpos($text, "bene") !== false
+                || strpos($text, "aiuto") === 0 ){
+                if($discorso_iniziato == false) {
+                    send($chatid, "Perfetto, cosa stai cercando?");
+                    setDiscorsoIniziato(true, "variables.json");
+                }
+                if ($discorso_iniziato == true) {
+                    send($chatid, "Ok, hai in mente altre caratteristiche?
+                    \nImpermeabile, capiente, resistente? Dimmi con che caratteristiche lo vorresti. 
+                    \nSe non ti interessa nessuna caratteristica particolare dimmi nessuna");
+                }
+            }
+            if (strpos($text, "zaino") !== false || strpos($text, "zainetto") !== false) {
+                send($chatid, "Ti serve per una escursione in montagna?");
+            }
+            if ( strpos($text, "impermeabile") !== false || strpos($text, "capiente") !== false
+                || strpos($text, "resistente") !== false || strpos($text, "nessuna") !== false ) {
+                send($chatid, "Lo vorresti da uomo o da donna?");
+            }
+            if (strpos($text, "uomo") !== false ) {
+                send($chatid, "Secondo me il modello NH500 30L è quello più adatto a te!");
+            } elseif (strpos($text, "donna") !== false ) {
+                send($chatid, "Secondo me il modello MH100 30L è quello più adatto a te!");
             }
             break;
 
 
-
-        case 2:
-            send($chatid, "Stiamo ancora sviluppando questo questionario");
-            break;
         case 3:
             send($chatid, "Stiamo ancora sviluppando questo questionario");
             break;
