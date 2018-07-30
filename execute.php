@@ -144,7 +144,7 @@ if ($tipo_questionario != 0) {
         // 2 = Needs Parlare e Guardare
         case 2:
             if (strpos($text, "inizia") === 0) {
-                sleep(30);
+                sleep(25);
                 send($chatid, "Ciao! Ho visto che stai guardando degli zaini, posso aiutarti a scegliere?");
             }
             if (strpos($text, "uomo") !== false ) {
@@ -243,7 +243,7 @@ if ($tipo_questionario != 0) {
 
         case 4:
             if (strpos($text, "inizia") === 0) {
-                sleep(30);
+                sleep(25);
                 send($chatid, "Ciao! Ho visto che stai guardando delle magliette, posso aiutarti a scegliere?");
             }
             if (strpos($text, "uomo") !== false ) {
