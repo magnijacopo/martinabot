@@ -104,7 +104,7 @@ if ($tipo_questionario != 0) {
         // 1 = Needs Parlare
         case 1:
             if (strpos($text, "inizia") === 0) {
-                sleep(5);
+                sleep(8);
                 send($chatid, "Benvenuto! Posso aiutarti?");
             }
             if (strpos($text, "uomo") !== false ) {
@@ -184,7 +184,7 @@ if ($tipo_questionario != 0) {
         // 3 = Wants Parlare
         case 3:
             if (strpos($text, "inizia") === 0) {
-                sleep(5);
+                sleep(8);
                 send($chatid, "Benvenuto! Posso aiutarti?");
             }
             if (strpos($text, "uomo") !== false ) {
